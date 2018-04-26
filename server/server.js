@@ -4,18 +4,19 @@ const _ = require('lodash');
 const express = require('express');
 const bodyParser = require('body-parser');
 const { ObjectID } = require('mongodb');
+const jwt = require('jsonwebtoken');
 
 const { mongoose } = require('./db/mongoose');
 const { Todo } = require('./models/Todo');
 const { User } = require('./models/User');
 
-var app = express();
+let app = express();
 const port = process.env.PORT;
 
 app.use(bodyParser.json())
 
 app.post('/todos', (req, res) => {
-    var todo = new Todo({
+    let todo = new Todo({
         text: req.body.text
     })
 
@@ -93,7 +94,26 @@ app.patch('/todos/:id', (req, res) => {
         .catch(e => {
             res.status(400).send();
         });
-})
+});
+
+app.post("/users", (req, res) => {
+    let body = _.pick(req.body, ['email', 'password']);
+    let user = new User(body);
+
+    //User.findByToken()
+
+    user
+        .save()
+        .then(doc => {
+            return user.generateAuthToken();
+        })
+        .then((token) => {
+            res.header('x-auth', token).send(user);
+        })
+        .catch(e => {
+            res.status(400).send(e);
+        });
+});
 
 app.listen(port, () => {
     console.log(`Started on port: ${port}`);
