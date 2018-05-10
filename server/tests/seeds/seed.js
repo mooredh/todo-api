@@ -1,5 +1,6 @@
 const { ObjectID } = require('mongodb');
 const jwt = require('jsonwebtoken');
+const secret = process.env.JWT_SECRET;
 
 const { Todo } = require('./../../models/Todo');
 const { User } = require('./../../models/User');
@@ -13,7 +14,7 @@ const users = [{
         password: "testpass",
         tokens: [{
             access: "auth",
-            token: jwt.sign({ _id: userOneId, access: "auth" }, "abc123").toString()
+            token: jwt.sign({ _id: userOneId, access: "auth" }, secret).toString()
         }]
     },
     {
@@ -22,7 +23,7 @@ const users = [{
         password: "testpass",
         tokens: [{
             access: "auth",
-            token: jwt.sign({ _id: userTwoId, access: "auth" }, "abc123").toString()
+            token: jwt.sign({ _id: userTwoId, access: "auth" }, secret).toString()
         }]
     }
 ];

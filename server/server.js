@@ -5,6 +5,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const { ObjectID } = require('mongodb');
 const jwt = require('jsonwebtoken');
+const secret = process.env.JWT_SECRET;
 
 const { mongoose } = require('./db/mongoose');
 const { Todo } = require('./models/Todo');
